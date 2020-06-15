@@ -6,7 +6,10 @@ public class AirportSecurity implements  ParkingLotObserver {
         public void capacityIsFull() {
             capacityIsFull=true;
         }
-
+    @Override
+    public void capacityIsAvailable() {
+        capacityIsFull=false;
+    }
         public boolean isCapacityFull() {
             return this.capacityIsFull;
         }

@@ -99,5 +99,23 @@ Object vehicle2=new Object();
         Assert.assertTrue(capacityFull);
 
     }
+    @Test public void givenWhenParkingLotSpaceIsAvailableAfterFull_ShouldOnformTheOwner(){
+        Object vehicle2=new Object();
+
+        ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+        parkingLotSystem.registerParkingLotObservers(parkingLotOwner);
+        try {
+            parkingLotSystem.parkVehicle(vehicle);
+            parkingLotSystem.parkVehicle(vehicle2);
+
+
+        } catch (ParkinLotException e) {
+        }
+        parkingLotSystem.unParkVehicle(vehicle);
+        boolean capacityFull = parkingLotOwner.isCapacityFull();
+        Assert.assertFalse(capacityFull);
+
+
+    }
 
 }

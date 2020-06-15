@@ -35,6 +35,10 @@ if(this.isVehicleParked(vehicle))
         if(vehicle==null) return  false;
         if(this.vehicles.contains(vehicle)){
             this.vehicles.remove(vehicle);
+            for (ParkingLotObserver observer:observers
+                 ) {
+observer.capacityIsAvailable();
+            }
             return  true;
         }
         return false;
