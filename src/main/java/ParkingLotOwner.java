@@ -1,4 +1,4 @@
-public class ParkingLotOwner {
+public class ParkingLotOwner implements  ParkingLotObserver {
 
     private boolean capacityIsFull;
 
