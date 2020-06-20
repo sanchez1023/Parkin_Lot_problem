@@ -33,6 +33,7 @@ public class ParkingLotTest {
 
         }
         boolean isUnParked = parkingLotSystem.unParkVehicle(vehicle);
+        System.out.println("is parked"+isUnParked);
         Assert.assertTrue(isUnParked);
     }
     @Test public  void givenAVehicle_WhenAlreadyParked_ShouldReturnFalse(){
@@ -114,6 +115,25 @@ Object vehicle2=new Object();
         parkingLotSystem.unParkVehicle(vehicle);
         boolean capacityFull = parkingLotOwner.isCapacityFull();
         Assert.assertFalse(capacityFull);
+
+
+    }
+
+    @Test public  void  givenACarToParkAttenderCanParkTheCar() throws ParkinLotException {
+        Object vehicle2=new Object();
+        Object vehicle3=new Object();
+
+
+        parkingLotSystem.setCapacity(4);
+        parkingLotSystem.parkVehicle(vehicle);
+        parkingLotSystem.parkVehicle(vehicle2);
+
+        parkingLotSystem.parkVehicle(vehicle3);
+
+
+
+        int availableSlot = parkingLotSystem.getAvailableSlot();
+        Assert.assertEquals(3,availableSlot);
 
 
     }
