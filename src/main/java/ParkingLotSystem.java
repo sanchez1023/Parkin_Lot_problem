@@ -92,5 +92,25 @@ return  true;
 this.actualcapacity=capacity;
     }
 
+    public  int  findVehicle(Object vehicle) throws ParkinLotException {
+        int carPosition = getCarPosition(vehicle);
+        System.out.println("get car position"+carPosition);
+        if (carPosition != 0) {
+            return carPosition;
+        }
+        return 0;
+    }
+
+
+
+        private int getCarPosition(Object vehicle) throws ParkinLotException {
+            System.out.println("vehicle"+vehicle);
+            return parkingSlotMap.entrySet().stream()
+          .filter(entry -> vehicle.equals(entry.getValue()))
+          .map(Map.Entry::getKey)
+          .findFirst().get();
+        }
+
+
 
 }

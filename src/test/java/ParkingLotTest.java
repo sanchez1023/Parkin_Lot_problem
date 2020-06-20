@@ -137,5 +137,19 @@ Object vehicle2=new Object();
 
 
     }
+    @Test
+    	    public void givenVehicle_WhenFound_ShouldReturnVehicleAtPosition() throws ParkinLotException {
+        Object vehicle2=new Object();
+        Object vehicle3=new Object();
+        parkingLotSystem.setCapacity(4);
+
+        parkingLotSystem.parkVehicle(vehicle);
+        parkingLotSystem.parkVehicle(vehicle2);
+
+        parkingLotSystem.parkVehicle(vehicle3);
+
+        int vehiclePosition = parkingLotSystem.findVehicle(vehicle3);
+        Assert.assertEquals(3, vehiclePosition);
+    }
 
 }
