@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class ParkingLotSystem {
     private  int actualcapacity;
@@ -10,6 +8,7 @@ public class ParkingLotSystem {
     private AirportSecurity seucrity;
     private Map<Integer, Object> parkingSlotMap;
     int countOFVehicles=0;
+    private List<ParkingSlip> parkingSlips;
 
 
     public ParkingLotSystem(int capacity) {
@@ -39,9 +38,20 @@ if(this.isVehicleParked(vehicle))
     throw new ParkinLotException("Vehicle Already parked");
         int availableSlot = getAvailableSlot();
         addVehicle(availableSlot,vehicle);
+        createParkingSlip((Vehicle) vehicle);
+
         countOFVehicles++;
         System.out.println("value of index0"+this.vehicles.indexOf(vehicle));
 
+    }
+
+    private boolean createParkingSlip(Vehicle vehicle) {
+        ParkingSlip parkingSlip = new ParkingSlip(vehicle);
+        parkingSlip.inTime = LocalDateTime.now();
+        parkingSlip.id = UUID.randomUUID();
+        parkingSlip.parkingCharge = 20;
+        this.parkingSlips.add(parkingSlip);
+        return true;
     }
 
     private boolean addVehicle(int availableSlot, Object vehicle) {
@@ -110,6 +120,15 @@ this.actualcapacity=capacity;
           .map(Map.Entry::getKey)
           .findFirst().get();
         }
+
+    public double getParkingSlip(Vehicle vehicle) {
+        return (double) this.parkingSlips
+                .stream()
+                .filter(slip -> slip.vehicle.equals(vehicle))
+                .findFirst()
+                .get()
+                .parkingCharge;
+    }
 
 
 

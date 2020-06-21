@@ -151,5 +151,9 @@ Object vehicle2=new Object();
         int vehiclePosition = parkingLotSystem.findVehicle(vehicle3);
         Assert.assertEquals(3, vehiclePosition);
     }
-
+    @Test
+    public void givenVehicle_WhenParked_ShouldGiveParkingCharge() throws ParkinLotException {
+        parkingLotSystem.parkVehicle(vehicle);
+        Assert.assertEquals(10, parkingLotSystem.getParkingSlip((Vehicle) vehicle), 0.0);
+    }
 }
