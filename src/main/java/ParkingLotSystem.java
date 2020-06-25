@@ -46,9 +46,14 @@ observer.capacityIsFull();
 if(this.isVehicleParked(vehicle))
     throw new ParkinLotException("Vehicle Already parked");
         int availableSlot = getAvailableSlot();
-        addVehicle(availableSlot, vehicle);
-        this.createParkingSlip(vehicle);
 
+
+        this.createParkingSlip(vehicle);
+        if (vehicle.driver.equals(Vehicle.Drivertype.HANDICAP)) {
+            handicapParkVehicle(vehicle);
+        } else {
+            evenlyPark(vehicle);
+        }
         countOFVehicles++;
         System.out.println("value of index0"+this.vehicles.indexOf(vehicle));
 
@@ -165,5 +170,16 @@ this.actualcapacity=capacity;
         return (int) parkingLot.parkingSlots.stream().
                 filter(parkingSlot -> parkingSlot.vehicle == null)
                 .count();
+    }
+  private  void   handicapParkVehicle( Vehicle vehicle ){
+      ParkingSlot parkingSlot = parkingLots.stream().map(slots ->
+              slots.parkingSlots
+                      .stream()
+                      .filter(slot -> slot.vehicle == null)
+                      .findFirst()
+                      .get())
+              .findFirst()
+              .get();
+      parkingSlot.vehicle = vehicle;
     }
 }

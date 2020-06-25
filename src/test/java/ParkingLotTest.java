@@ -16,9 +16,9 @@ public class ParkingLotTest {
     @Before
     public  void setUp() throws  Exception{
         parkingLotSystem = new ParkingLotSystem(1);
-        vehicle3 = new Vehicle();
-        vehicle=new Vehicle();
-        vehicle2=new Vehicle();
+        vehicle3 = new Vehicle(Vehicle.Drivertype.NORMAL);
+        vehicle=new Vehicle(Vehicle.Drivertype.NORMAL);
+        vehicle2=new Vehicle(Vehicle.Drivertype.NORMAL);
         parkingLot1 = new ParkingLot(3);
         parkingLot2 = new ParkingLot(2);
         parkingLot3 = new ParkingLot(2);
@@ -135,8 +135,7 @@ public class ParkingLotTest {
     }
 
     @Test public  void  givenACarToParkAttenderCanParkTheCar() throws ParkinLotException {
-        Object vehicle2=new Vehicle();
-        Object vehicle3=new Vehicle();
+
 
 
         parkingLotSystem.setCapacity(4);
@@ -186,6 +185,20 @@ public class ParkingLotTest {
         Assert.assertEquals(vehicle,parkingLot1.parkingSlots.get(0).vehicle);
         Assert.assertEquals(vehicle2,parkingLot2.parkingSlots.get(0).vehicle);
         Assert.assertEquals(vehicle3,parkingLot3.parkingSlots.get(0).vehicle);
+
+    }
+
+    @Test public void givenVehicle_WhenDriverIsHandicap_ShouldAssignNearestSpace() throws ParkinLotException {
+      Vehicle vehicle4= new Vehicle(Vehicle.Drivertype.HANDICAP);
+        parkingLotSystem.parkVehicle(vehicle);
+        parkingLotSystem.parkVehicle(vehicle2);
+
+        parkingLotSystem.parkVehicle(vehicle4);
+
+        Assert.assertEquals(vehicle, parkingLot1.parkingSlots.get(0).vehicle);
+        Assert.assertEquals(vehicle2, parkingLot2.parkingSlots.get(0).vehicle);
+        Assert.assertEquals(vehicle4, parkingLot1.parkingSlots.get(1).vehicle);
+
 
     }
 }
