@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class ParkingLotSystem {
+public class ParkingLotSystem<vehicle> {
     private  int actualcapacity;
     private List vehicles;
     private List <ParkingLotObserver> observers;
@@ -9,6 +9,8 @@ public class ParkingLotSystem {
     private Map<Integer, Object> parkingSlotMap;
     int countOFVehicles=0;
     private List<ParkingSlip> parkingSlips;
+    List<ParkingLot> parkingLots = new ArrayList<>();
+
 
 
     public ParkingLotSystem(int capacity) {
@@ -16,15 +18,22 @@ public class ParkingLotSystem {
         this.vehicles=new ArrayList();
         parkingSlotMap= new HashMap<>();
         this.actualcapacity=capacity;
+        this.parkingSlips= new ArrayList();
         createSlot();
     }
+
+    public ParkingLotSystem(ParkingLot ... parkingLots) {
+
+      this.  parkingLots.addAll(Arrays.asList(parkingLots));
+    }
+
     private void createSlot() {
         for (int i = 0; i < actualcapacity; i++) {
             parkingSlotMap.put(i+1 , null);
         }
     }
-    public void parkVehicle(Object vehicle) throws ParkinLotException {
-        if(this.vehicles.size() == this.actualcapacity)
+    public void parkVehicle(Vehicle vehicle) throws ParkinLotException {
+        if(this.parkingSlotMap.size() == this.actualcapacity)
         {
             for (ParkingLotObserver observer:observers
                  ) {
@@ -37,24 +46,24 @@ observer.capacityIsFull();
 if(this.isVehicleParked(vehicle))
     throw new ParkinLotException("Vehicle Already parked");
         int availableSlot = getAvailableSlot();
-        addVehicle(availableSlot,vehicle);
-        createParkingSlip((Vehicle) vehicle);
+        addVehicle(availableSlot, vehicle);
+        this.createParkingSlip(vehicle);
 
         countOFVehicles++;
         System.out.println("value of index0"+this.vehicles.indexOf(vehicle));
 
     }
 
-    private boolean createParkingSlip(Vehicle vehicle) {
+    private boolean createParkingSlip( Vehicle vehicle) {
         ParkingSlip parkingSlip = new ParkingSlip(vehicle);
         parkingSlip.inTime = LocalDateTime.now();
         parkingSlip.id = UUID.randomUUID();
-        parkingSlip.parkingCharge = 20;
+        parkingSlip.parkingCharge = 10;
         this.parkingSlips.add(parkingSlip);
         return true;
     }
 
-    private boolean addVehicle(int availableSlot, Object vehicle) {
+    private boolean addVehicle(int availableSlot, Vehicle vehicle) {
         this.parkingSlotMap.put(availableSlot, vehicle);
         return true;
 
@@ -74,10 +83,12 @@ if(this.isVehicleParked(vehicle))
 
 
 
-    public boolean unParkVehicle(Object vehicle) {
+    public boolean unParkVehicle(Vehicle vehicle) {
+        System.out.println("value of vehicle"+this.vehicles.contains(vehicle));
         if(vehicle==null) return  false;
-        if(this.vehicles.contains(vehicle)){
-            this.vehicles.remove(vehicle);
+        if(this.parkingSlotMap.values().contains(vehicle)){
+            System.out.println("in if");
+            this.parkingSlotMap.values().remove(vehicle);
             for (ParkingLotObserver observer:observers
                  ) {
 observer.capacityIsAvailable();
@@ -91,7 +102,7 @@ observer.capacityIsAvailable();
 
     }
 
-    public boolean isVehicleParked(Object vehicle) {
+    public boolean isVehicleParked(Vehicle vehicle) {
         if(this.parkingSlotMap.values().contains(vehicle)) {
 return  true;
         }
@@ -102,7 +113,7 @@ return  true;
 this.actualcapacity=capacity;
     }
 
-    public  int  findVehicle(Object vehicle) throws ParkinLotException {
+    public  int  findVehicle(Vehicle vehicle) throws ParkinLotException {
         int carPosition = getCarPosition(vehicle);
         System.out.println("get car position"+carPosition);
         if (carPosition != 0) {
@@ -121,8 +132,8 @@ this.actualcapacity=capacity;
           .findFirst().get();
         }
 
-    public double getParkingSlip(Vehicle vehicle) {
-        return (double) this.parkingSlips
+    public int  getParkingSlip(Vehicle vehicle) {
+        return (int) this.parkingSlips
                 .stream()
                 .filter(slip -> slip.vehicle.equals(vehicle))
                 .findFirst()
@@ -131,5 +142,28 @@ this.actualcapacity=capacity;
     }
 
 
+    public boolean evenlyPark(Vehicle vehicle) throws ParkinLotException {
+     return   getParkingSlots().parkVehicleInSlot(vehicle);
 
+    }
+    private ParkingLot getParkingSlots(){
+        ParkingLot parkingLot=new ParkingLot(2);
+
+        int max=Integer.MIN_VALUE;
+        for(ParkingLot i:parkingLots){
+            int emptyCount = getNumEmptySlot(i);
+            if(max<emptyCount)
+                max=emptyCount;
+            parkingLot = i;
+
+
+        }
+        return  parkingLot;
+    }
+
+    private int getNumEmptySlot(ParkingLot parkingLot) {
+        return (int) parkingLot.parkingSlots.stream().
+                filter(parkingSlot -> parkingSlot.vehicle == null)
+                .count();
+    }
 }
